@@ -1,4 +1,4 @@
-const { randomUUID } = require('crypto');
+// const { randomUUID } = require('crypto');
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
@@ -50,21 +50,63 @@ app.post('/api/notes', (req, res) => {
     if (note) {
         const newNote = {
             note,
-            note_id: randomUUID(),
+            note_id: uuid(),
         };
 
+// First attempt:
         readAndAppend(newNote, './db/db.json');
 
         const response = {
             status: 'success',
-            body: newFeedback,
+            body: newNote,
         };
 
         res.json(response);
     } else {
-        res.json('Error in posting feedback');
+        res.json('Error in adding note');
     }
 });
+
+
+
+    //    Second attempt:
+      // Convert the data to a string so we can save it
+//       const noteString = JSON.stringify(newNote);
+  
+//       // Write the string to a file
+//       fs.readFile(`./db/db.json`, 'utf8', (err, data) => {
+//         if (err) {
+//           console.log(err);
+  
+//         } else {
+//           const parsedNotes = JSON.parse(data);
+//           parsedNotes.push(newNote)
+  
+//           fs.writeFile(`./db/db.json`, JSON.stringify(parsedNotes), (err) =>
+//             err
+//               ? console.error(err)
+//               : console.log(
+//                 `Review for ${newNote.body} has been written to JSON file`
+//               )
+//           );
+  
+//         }
+//       })
+  
+  
+//       const response = {
+//         status: 'success',
+//         body: newNote,
+//       };
+  
+//       console.log(response);
+//       res.status(201).json(response);
+//     } else {
+//       res.status(500).json('Error in posting note');
+//     }
+//   });
+
+
 
 app.listen(PORT, () =>
     console.log(`App listening at http://localhost:${PORT} 🚀`)
