@@ -2,7 +2,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-// const api = require('./routes/index.js');
+// const api = require('./public/assets/js/index.js');
 // const feedback = require('express').Router();
 const { readFromFile, readAndAppend } = require('./helpers/fsUtils');
 const uuid = require('./helpers/uuid');
@@ -43,17 +43,18 @@ app.get('/api/notes', (req, res) => {
 // and then return the new note to the client. You'll need to find a way to give each note a unique id when it's saved 
 // (look into npm packages that could do this for you).
 
+// First attempt:
 app.post('/api/notes', (req, res) => {
     // Log that a POST request was received
     console.info(`${req.body} request received to add note`);
     const note = req.body;
     if (note) {
         const newNote = {
-            note,
+            title: note.title,
+            text: note.text,
             note_id: uuid(),
         };
 
-// First attempt:
         readAndAppend(newNote, './db/db.json');
 
         const response = {
@@ -106,7 +107,15 @@ app.post('/api/notes', (req, res) => {
 //     }
 //   });
 
+// third attempt
+// app.post('/api/notes', (req, res) => {
+//     readAndAppend(newNote, './db/db.json');
 
+//     const response = {
+//         status: 'success',
+//         body: newNote,
+//     };
+// });
 
 app.listen(PORT, () =>
     console.log(`App listening at http://localhost:${PORT} 🚀`)
