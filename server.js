@@ -1,16 +1,12 @@
-// const { randomUUID } = require('crypto');
+
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-// const api = require('./public/assets/js/index.js');
-// const feedback = require('express').Router();
-const { readFromFile, readAndAppend } = require('./helpers/fsUtils');
+
+const { readFromFile, readAndAppend, writeToFile } = require('./helpers/fsUtils');
 const uuid = require('./helpers/uuid');
 
-// module.exports = () =>
-//   Math.floor((1 + Math.random()) * 0x10000)
-//     .toString(16)
-//     .substring(1);
+
 
 const PORT = process.env.PORT || 3001;
 
@@ -19,7 +15,7 @@ const app = express();
 // Middleware for parsing JSON and urlencoded form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use('/api', api);
+
 
 
 app.use(express.static('public'));
@@ -52,7 +48,7 @@ app.post('/api/notes', (req, res) => {
         const newNote = {
             title: note.title,
             text: note.text,
-            note_id: uuid(),
+            id: uuid(),
         };
 
         readAndAppend(newNote, './db/db.json');
@@ -67,55 +63,17 @@ app.post('/api/notes', (req, res) => {
         res.json('Error in adding note');
     }
 });
+// query paramater true passed into otherwise it doesn't
+app.delete('/api/notes/:id', (req, res) => {
+    readFromFile('./db/db.json').then((data) => {
+        const notes =  JSON.parse(data)
+        const newNotes = notes.filter( note => note.id !== req.params.id)
+        console.log(newNotes);
+        writeToFile('./db/db.json', newNotes) 
+        res.send(200).status(200)
+    })
+})
 
-
-
-    //    Second attempt:
-      // Convert the data to a string so we can save it
-//       const noteString = JSON.stringify(newNote);
-  
-//       // Write the string to a file
-//       fs.readFile(`./db/db.json`, 'utf8', (err, data) => {
-//         if (err) {
-//           console.log(err);
-  
-//         } else {
-//           const parsedNotes = JSON.parse(data);
-//           parsedNotes.push(newNote)
-  
-//           fs.writeFile(`./db/db.json`, JSON.stringify(parsedNotes), (err) =>
-//             err
-//               ? console.error(err)
-//               : console.log(
-//                 `Review for ${newNote.body} has been written to JSON file`
-//               )
-//           );
-  
-//         }
-//       })
-  
-  
-//       const response = {
-//         status: 'success',
-//         body: newNote,
-//       };
-  
-//       console.log(response);
-//       res.status(201).json(response);
-//     } else {
-//       res.status(500).json('Error in posting note');
-//     }
-//   });
-
-// third attempt
-// app.post('/api/notes', (req, res) => {
-//     readAndAppend(newNote, './db/db.json');
-
-//     const response = {
-//         status: 'success',
-//         body: newNote,
-//     };
-// });
 
 app.listen(PORT, () =>
     console.log(`App listening at http://localhost:${PORT} 🚀`)
