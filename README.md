@@ -7,4 +7,4 @@ my_notes is a Note Taker application that can be used to write and save notes. T
 
 Application GitHub URL : <a href= "https://github.com/monicadolce/my_notes">Visit Monica's GitHub Repository</a> 
 
-Application Heroku URL : <a href= "https://morning-brook-53750.herokuapp.com/">Visit Live my_notes app</a> 
+Application Heroku URL : <a href= "https://morning-brook-53750.herokuapp.com/">Visit Live My_Notes</a> 
